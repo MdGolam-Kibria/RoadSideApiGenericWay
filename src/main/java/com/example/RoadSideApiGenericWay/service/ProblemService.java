@@ -8,5 +8,5 @@ public interface ProblemService {
     com.example.RoadSideApiGenericWay.view.Response update(String email, ProblemDto problemDto);
     Response get(Long id);
     Response delete(Long id);
-    Response getAll();
+    com.example.RoadSideApiGenericWay.view.Response getAll();
 }

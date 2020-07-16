@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-    <link rel="stylesheet" th:href="@{/assets/css/custom.css}">
+    <link rel="stylesheet" th:href="@{/static/assets/css/login.css}">
     <!-- Favicon and touch icons -->
     <link rel="shortcut icon" href="assets/ico/favicon.png">
 
@@ -31,17 +31,17 @@
                     <h5>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veritatis quam numquam</h5>
                 </div>
                 <div class="login-body">
-                    <form role="form" action="" method="post" class="login-form">
+                    <form role="form" th:action="@{/doLogIn}" method="post" class="login-form">
                         <div class="form-group ">
                             <div class="pos-r">
-                                <input   id="form-username" type="text" name="form-username" placeholder="Username..." class="form-username form-control">
+                                <input   id="form-username" type="text" name="email" required placeholder="Enter your Email..." class="form-username form-control">
                                 <i class="fa fa-user"></i>
                                 <span></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="pos-r">
-                                <input id="form-password" type="password" name="form-password" placeholder="Password..." class="form-password form-control" >
+                                <input id="form-password" type="password" name="bcryptPassword" required placeholder="Password..." class="form-password form-control" >
                                 <i class="fa fa-lock"></i>
                                 <span></span>
                             </div>

@@ -12,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service("problemService")
 public class ProblemServiceImplement implements ProblemService {
     private final String root = "Problem";
@@ -59,7 +62,18 @@ public class ProblemServiceImplement implements ProblemService {
     }
 
     @Override
-    public Response getAll() {
-        return null;
+    public com.example.RoadSideApiGenericWay.view.Response getAll() {
+        List<Problem>problems = problemRepository.findAllByIsActiveTrue();
+        List<ProblemDto> productDtos = this.getProducts(problems);
+        return ResponseBuilder.getSuccessResponce(HttpStatus.OK, root + " retrieved Successfully",productDtos);
+    }
+    private List<ProblemDto> getProducts(List<Problem> problems) {//DTO dara data dissi getAll method ke ei method dara
+        List<ProblemDto> productDtos = new ArrayList<>();
+        problems.forEach(product -> {
+            modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
+            ProblemDto problemDto =  modelMapper.map(product,ProblemDto.class);
+            productDtos.add(problemDto);
+        });
+        return productDtos;
     }
 }

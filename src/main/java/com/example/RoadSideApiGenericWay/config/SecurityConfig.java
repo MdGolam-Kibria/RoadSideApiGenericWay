@@ -4,6 +4,8 @@ import com.example.RoadSideApiGenericWay.filter.CustomFilter;
 import com.example.RoadSideApiGenericWay.service.securityService.MyAuthenticationEntryPoint;
 import com.example.RoadSideApiGenericWay.service.securityService.CustomUserDetailsService;
 import com.example.RoadSideApiGenericWay.util.UrlConstraint;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,12 +17,22 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    Logger LOGGER = LoggerFactory.getLogger(SecurityConfig.class.getName());
     private final CustomUserDetailsService customUserDetailsService;
     private final PasswordEncoder passwordEncoder;
     private final MyAuthenticationEntryPoint myAuthenticationEntryPoint;
@@ -57,9 +69,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .authorizeRequests().antMatchers(UrlConstraint.AuthManagement.ROOT + allPrefix)
+                .authorizeRequests().antMatchers("/login*")
                 .permitAll()
-                .anyRequest().authenticated();
+                .anyRequest().authenticated()
+                .and()
+                .formLogin()
+                .loginPage("/login")
+                .usernameParameter("email")
+                .passwordParameter("bcryptPassword")
+                .loginProcessingUrl("/doLogIn")
+                .defaultSuccessUrl("/doLogIn")
+                .failureUrl("/login_error")
+                .successHandler((httpServletRequest, httpServletResponse, authentication) -> {
+                    if (authentication.isAuthenticated()){
+                        LOGGER.info("login success "+ authentication.getName());
+                        httpServletResponse.sendRedirect("/");
+                    }
+                })
+                .failureHandler((httpServletRequest, httpServletResponse, e) -> httpServletResponse.sendRedirect("/login_error"));
         http.addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
