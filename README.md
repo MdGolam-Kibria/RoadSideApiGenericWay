@@ -1,4 +1,5 @@
 # RoadSideApiGenericWay
 API for Roadside application
 - Generic way api with spring security.
-- Using AOP
+- use MYSQL Database
+- Using <b>AOP</b>
