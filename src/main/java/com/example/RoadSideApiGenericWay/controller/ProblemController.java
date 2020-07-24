@@ -23,9 +23,10 @@ public class ProblemController {
     public ProblemController(ProblemService problemService) {
         this.problemService = problemService;
     }
+
     @PostMapping(UrlConstraint.ProblemManagement.CREATE)
     @ValidateData
-    public Response createProblem(@Valid @RequestBody ProblemDto problemDto, BindingResult bindingResult, HttpServletRequest request, HttpServletResponse response){
+    public Response createProblem(@Valid @RequestBody ProblemDto problemDto, BindingResult bindingResult, HttpServletRequest request, HttpServletResponse response) {
 //        if (bindingResult.hasErrors()){
 //            return ResponseBuilder.getFailureResponce(bindingResult,"Bean Binding Error");
 //        }
@@ -40,9 +41,11 @@ public class ProblemController {
 //        }
         return problemService.update(email, problemDto);
     }
-@GetMapping("/getAll")
-    public Response getAll(HttpServletRequest request){
+
+    @GetMapping("/getAll")
+    public Response getAll(HttpServletRequest request) {
         return problemService.getAll();
     }
+
 
 }
